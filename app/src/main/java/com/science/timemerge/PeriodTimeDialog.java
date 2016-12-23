@@ -30,7 +30,6 @@ public class PeriodTimeDialog {
     private PickerView mPvStartMinute;
     private PickerView mPvEndHour;
     private PickerView mPvEndMinute;
-    private StringTokenizer st;
     private DialogCloseListener mCloseListener;
 
     public PeriodTimeDialog(final Context context, String title, String text) {
@@ -126,7 +125,7 @@ public class PeriodTimeDialog {
     public void initTime(String time) {
         if (!TextUtils.isEmpty(time)) {
             // 时间段的切割
-            st = new StringTokenizer(time, ":-");
+            StringTokenizer st = new StringTokenizer(time, ":-");
 
             while (st.hasMoreElements()) {
                 // 把切割的字符串数据赋值给时间段的四个值，达到对话框没有滑动更改时间的时候返回去的数据是之前显示的数据
