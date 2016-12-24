@@ -54,7 +54,9 @@ public class PeriodTimeDialog {
             mBuilder.setNegativeButton(text, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    mCloseListener.delete();
+                    if (mCloseListener != null) {
+                        mCloseListener.delete();
+                    }
                 }
             });
         }
