@@ -62,12 +62,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
         return mListTimes;
     }
 
+    /**
+     * 如果只有一条数据，不能删除且不用合并时间，只是简单的修改时间
+     * @param time
+     */
+    public void updateData(String time) {
+        mListTimes.set(0, time);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 合并排序后清除原来数据再添加
+     * @param list
+     */
     public void setNewDatas(List<String> list) {
         mListTimes.clear();
         mListTimes.addAll(list);
         notifyDataSetChanged();
     }
 
+    /**
+     * 如果数据大于一，则可以删除数据
+     */
     public void remove(MyHolder holder) {
         mListTimes.remove(holder.getLayoutPosition());
         notifyDataSetChanged();

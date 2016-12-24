@@ -31,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        String[] times = {"06:00-12:00", "15:00-18:00", "21:00-23:00"};
-        mTvNewTimePeriod.setVisibility(times.length == 3 ? View.GONE : View.VISIBLE);
+        String[] times = {"06:00-12:00"};
         // List<String> listTime = Arrays.asList(times);不支持remove等方法
         List<String> listTime = new ArrayList<>(Arrays.asList(times));
         mAdapter = new MyAdapter(listTime);
@@ -49,16 +48,23 @@ public class MainActivity extends AppCompatActivity {
         getTime(null, -1, mAdapter.getDatas().get(mAdapter.getItemCount() - 1), "取消");
     }
 
+    /**
+     * 检查时间格式，并打开弹窗选择时间
+     *
+     * @param holder
+     * @param position
+     * @param time
+     * @param negative
+     */
     private void getTime(final MyAdapter.MyHolder holder, final int position, final String time, String negative) {
-        PeriodTimeDialog dialog = new PeriodTimeDialog(this, "营业时间", negative);
         String isTimePeriod = "^([0-1][0-9]|[2][0-3]):([0-5][0-9])-([0-1][0-9]|[2][0-4]):([0-5][0-9])$";
         if (!Pattern.matches(isTimePeriod, time)) {
             Toast.makeText(this, "时间格式错误!", Toast.LENGTH_SHORT).show();
             return;
         }
-        // 初始化对话框默认时间，与当前页面的店铺营业时间保持一致
         String tt[] = time.split("-");
         String t = "24:00".equals(tt[1]) ? tt[0] + "-00:00" : time;
+        PeriodTimeDialog dialog = new PeriodTimeDialog(this, "营业时间", negative);
         dialog.initTime(t);
         dialog.setCloseListener(new PeriodTimeDialog.DialogCloseListener() {
             @Override
@@ -85,30 +91,31 @@ public class MainActivity extends AppCompatActivity {
         if ("00:00".equals(timesCurrent[1])) {
             timesCurrent[1] = "24:00";
         }
-        if (compare(timesCurrent[0], timesCurrent[1]) == 1) {
-            if (mAdapter.getDatas().size() == 1 && position == 0) {
-                mAdapter.getDatas().set(0, timesCurrent[0] + "-" + timesCurrent[1]);
-                mAdapter.notifyDataSetChanged();
-            } else {
-                // 修改or新建营业时间
-                List<BusinessTime> beforeTimeList = new ArrayList<>();
-                for (int i = 0; i < mAdapter.getDatas().size(); i++) {
-                    String times[] = mAdapter.getDatas().get(i).split("-");
-                    beforeTimeList.add(new BusinessTime(times[0], times[1]));
-                }
-                beforeTimeList.add(new BusinessTime(timesCurrent[0], timesCurrent[1]));
-                List<BusinessTime> timeList = mergeTime(beforeTimeList);
-                List<String> list = new ArrayList<>();
-                for (BusinessTime time : timeList) {
-                    list.add(time.getStart() + "-" + time.getEnd());
-                }
-                mAdapter.setNewDatas(list);
-                mTvNewTimePeriod.setVisibility(mAdapter.getDatas().size() == 3 ? View.GONE : View.VISIBLE);
-            }
-        } else if (compare(timesCurrent[0], timesCurrent[1]) == -1) {
+        if (compare(timesCurrent[0], timesCurrent[1]) == -1) {
             Toast.makeText(this, "营业时间不能跨天!", Toast.LENGTH_SHORT).show();
-        } else if (compare(timesCurrent[0], timesCurrent[1]) == 0) {
+            return;
+        }
+        if (compare(timesCurrent[0], timesCurrent[1]) == 0) {
             Toast.makeText(this, "营业时间不能相同!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mAdapter.getItemCount() == 1 && position == 0) {
+            mAdapter.updateData(timesCurrent[0] + "-" + timesCurrent[1]);
+        } else {
+            // 修改or新建营业时间
+            List<BusinessTime> beforeTimeList = new ArrayList<>();
+            for (int i = 0; i < mAdapter.getDatas().size(); i++) {
+                String times[] = mAdapter.getDatas().get(i).split("-");
+                beforeTimeList.add(new BusinessTime(times[0], times[1]));
+            }
+            beforeTimeList.add(new BusinessTime(timesCurrent[0], timesCurrent[1]));
+            List<BusinessTime> timeList = mergeTime(beforeTimeList);
+            List<String> list = new ArrayList<>();
+            for (BusinessTime time : timeList) {
+                list.add(time.getStart() + "-" + time.getEnd());
+            }
+            mAdapter.setNewDatas(list);
+            mTvNewTimePeriod.setVisibility(mAdapter.getDatas().size() == 3 ? View.GONE : View.VISIBLE);
         }
     }
 
