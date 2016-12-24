@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#e5e5e5"/>
+        android:background="#e5e5e5" />
 
     <TextView
         android:id="@+id/tv_new_time"
@@ -23,5 +23,6 @@
         android:gravity="center"
         android:onClick="onClick"
         android:padding="16dp"
-        android:text="新建时间段"/>
+        android:text="新建时间段"
+        android:textSize="16dp" />
 </LinearLayout>

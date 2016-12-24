@@ -20,7 +20,6 @@ import java.util.StringTokenizer;
 
 public class PeriodTimeDialog {
 
-    private AlertDialog.Builder mBuilder;
     private String start_hour = "00"; // 开始营业的时
     private String start_minute = "00"; // 开始营业的分
     private String end_hour = "00"; // 停止营业的时
@@ -33,7 +32,7 @@ public class PeriodTimeDialog {
     private DialogCloseListener mCloseListener;
 
     public PeriodTimeDialog(final Context context, String title, String text) {
-        mBuilder = new AlertDialog.Builder(context);
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
         mBuilder.setTitle(title);
         View view = LayoutInflater.from(context).inflate(R.layout.period_time, null);
         mBuilder.setView(view);

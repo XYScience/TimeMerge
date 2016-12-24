@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
     private MyAdapter mAdapter;
     private TextView mTvNewTimePeriod;
 
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mTvNewTimePeriod = (TextView) findViewById(R.id.tv_new_time);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         String[] times = {"06:00-12:00"};
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 检查时间格式，并打开弹窗选择时间
+     * 检查时间格式，并打开弹窗选择时间。
      *
      * @param holder
      * @param position
@@ -91,12 +90,9 @@ public class MainActivity extends AppCompatActivity {
         if ("00:00".equals(timesCurrent[1])) {
             timesCurrent[1] = "24:00";
         }
-        if (compare(timesCurrent[0], timesCurrent[1]) == -1) {
+        // 开始时间大于或等于结束时间则认为是跨天。如果00:00-00:00(相当于00:00-24:00)则认为一整天
+        if (compare(timesCurrent[0], timesCurrent[1]) == -1 || compare(timesCurrent[0], timesCurrent[1]) == 0) {
             Toast.makeText(this, "营业时间不能跨天!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (compare(timesCurrent[0], timesCurrent[1]) == 0) {
-            Toast.makeText(this, "营业时间不能相同!", Toast.LENGTH_SHORT).show();
             return;
         }
         if (mAdapter.getItemCount() == 1 && position == 0) {
