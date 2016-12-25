@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 时间段合并排序
+     * 时间段合并排序，限制开始时间小于结束时间，即在一天的时间里比较，不能跨天
      *
      * @param businessTimes
      * @return
@@ -126,17 +126,12 @@ public class MainActivity extends AppCompatActivity {
 
         Stack s = new Stack();
         Stack e = new Stack();
-        s.push("000:00");
-        e.push("000:00");
+        s.push(businessTimes.get(0).getStart());
+        e.push(businessTimes.get(0).getEnd());
         Log.e(">>>>>", "↓要合并的时间段↓");
-        for (BusinessTime time : businessTimes) {
+        for (int i = 1; i < businessTimes.size(); i++) {
+            BusinessTime time = businessTimes.get(i);
             Log.e(">>>>>", time.getStart() + " " + time.getEnd());
-            if (compare(time.getStart(), time.getEnd()) == -1)
-                try {
-                    throw new Exception("The time is incorrect.");
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
 
             // 首先最小的时间段进栈，如果次小时间段的开始时间>最小时间段的结束时间，则说明次小时间段和最小时间段没有交集
             // time.getStart()>e.peek()
@@ -163,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
             s.pop();
         }
         Collections.sort(businessTimes);
-        businessTimes.remove(0);
         Log.e(">>>>>", "↓已经合并的时间段↓");
         for (BusinessTime time : businessTimes) {
             Log.e(">>>>>", time.getStart() + " " + time.getEnd());
@@ -197,6 +191,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 1：start早于end，即start < end；-->正确的时间（不能跨天）
+     * -1：start晚于end，即start > end；
+     * 0：时间相等。即start=end。
+     *
+     * @param start
+     * @param end
+     * @return
+     */
     public static int compare(String start, String end) {
         String starts[] = start.split(":");
         String ends[] = end.split(":");
@@ -204,15 +207,12 @@ public class MainActivity extends AppCompatActivity {
             return 1;
         } else if (Integer.valueOf(starts[0]) > Integer.valueOf(ends[0])) {
             return -1;
-        } else if (starts[0].equals(ends[0])) {
-            if (Integer.valueOf(starts[1]) < Integer.valueOf(ends[1])) {
-                return 1;
-            } else if (Integer.valueOf(starts[1]) > Integer.valueOf(ends[1])) {
-                return -1;
-            } else {
-                return 0;
-            }
+        } else if (Integer.valueOf(starts[1]) < Integer.valueOf(ends[1])) {
+            return 1;
+        } else if (Integer.valueOf(starts[1]) > Integer.valueOf(ends[1])) {
+            return -1;
+        } else {
+            return 0;
         }
-        return -1;
     }
 }
