@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void delete() {
                 mAdapter.remove(holder);
+                // 最多新建三个时间段
                 mTvNewTimePeriod.setVisibility(mAdapter.getDatas().size() < 3 ? View.VISIBLE : View.GONE);
             }
         });
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 list.add(time.getStart() + "-" + time.getEnd());
             }
             mAdapter.setNewDatas(list);
+            // 最多新建三个时间段
             mTvNewTimePeriod.setVisibility(mAdapter.getDatas().size() == 3 ? View.GONE : View.VISIBLE);
         }
     }
