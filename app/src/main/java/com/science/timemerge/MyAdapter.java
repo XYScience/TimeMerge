@@ -66,8 +66,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
      * 如果只有一条数据，不能删除且不用合并时间，只是简单的修改时间
      * @param time
      */
-    public void updateData(String time) {
-        mListTimes.set(0, time);
+    public void updateData(int position, String time) {
+        mListTimes.set(position, time);
         notifyDataSetChanged();
     }
 

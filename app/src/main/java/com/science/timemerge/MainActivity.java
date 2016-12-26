@@ -96,25 +96,25 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "营业时间不能跨天!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mAdapter.getItemCount() == 1 && position == 0) {
-            mAdapter.updateData(timesCurrent[0] + "-" + timesCurrent[1]);
-        } else {
-            // 修改or新建营业时间
-            List<BusinessTime> beforeTimeList = new ArrayList<>();
-            for (int i = 0; i < mAdapter.getDatas().size(); i++) {
-                String times[] = mAdapter.getDatas().get(i).split("-");
-                beforeTimeList.add(new BusinessTime(times[0], times[1]));
-            }
-            beforeTimeList.add(new BusinessTime(timesCurrent[0], timesCurrent[1]));
-            List<BusinessTime> timeList = mergeTime(beforeTimeList);
-            List<String> list = new ArrayList<>();
-            for (BusinessTime time : timeList) {
-                list.add(time.getStart() + "-" + time.getEnd());
-            }
-            mAdapter.setNewDatas(list);
-            // 最多新建三个时间段
-            mTvNewTimePeriod.setVisibility(mAdapter.getDatas().size() == 3 ? View.GONE : View.VISIBLE);
+
+        // 修改or新建营业时间
+        if (position != -1) {
+            mAdapter.updateData(position, timesCurrent[0] + "-" + timesCurrent[1]);
         }
+        List<BusinessTime> beforeTimeList = new ArrayList<>();
+        for (int i = 0; i < mAdapter.getDatas().size(); i++) {
+            String times[] = mAdapter.getDatas().get(i).split("-");
+            beforeTimeList.add(new BusinessTime(times[0], times[1]));
+        }
+        beforeTimeList.add(new BusinessTime(timesCurrent[0], timesCurrent[1]));
+        List<BusinessTime> timeList = mergeTime(beforeTimeList);
+        List<String> list = new ArrayList<>();
+        for (BusinessTime time : timeList) {
+            list.add(time.getStart() + "-" + time.getEnd());
+        }
+        mAdapter.setNewDatas(list);
+        // 最多新建三个时间段
+        mTvNewTimePeriod.setVisibility(mAdapter.getDatas().size() == 3 ? View.GONE : View.VISIBLE);
     }
 
     /**
